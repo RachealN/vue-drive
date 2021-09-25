@@ -4,7 +4,7 @@
 
     <div class="d-flex justify-content-between align-items-center py-2">
       <h6 class="text-muted mb-0">Files</h6>
-      <sort-toggler @sort-change="handleSortChange(event)"/>
+      <sort-toggler @sort-change="handleSortChange($event)"/>
     </div>
     <files-list :files="files"/>
   </div>
@@ -13,7 +13,7 @@
 <script>
 
 import filesApi from "../api/files";
-import { ref , onMounted, reactive } from "vue";
+import { ref , onMounted, reactive, watchEffect} from "vue";
 import ActionBar from "../components/ActionBar.vue";
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
@@ -43,7 +43,7 @@ export default {
       query._order = payload.order;
     }
 
-    onMounted(async() =>files.value = await fetchFiles(query));
+    watchEffect(async() =>files.value = await fetchFiles(query));
 
     return { files, handleSortChange };
 
