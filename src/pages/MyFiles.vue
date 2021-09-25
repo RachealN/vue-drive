@@ -8,32 +8,18 @@
         <icon-arrow-up />
       </button>
     </div>
-    <div class="row">
-      <div class="col-md-3" v-for="file in files" :key="`file=${file.id}`">
-        <div class="card mb-4">
-          <img class="file-thumb" :src="file.url" v-if="file.url" />
-          <div class="card-body text-center py-5" v-else>
-            <icon-type-common height="4em" width="4em" />
-          </div>
-          <div class="card-footer">
-            <div class="d-flex align-items-center">
-              <icon-type-common />
-              <span class="file-name">{{file.name}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <files-list :files="files"/>
   </div>
 </template>
 
 <script>
 import filesApi from "../api/files";
+import FilesList from "../components/files/FilesList.vue";
 import ActionBar from "../components/ActionBar.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
 
 export default {
-  components: { ActionBar, IconTypeCommon },
+  components: { ActionBar, IconTypeCommon, FilesList   },
 
   mounted(){
     this.fetchFiles()
