@@ -6,19 +6,25 @@
       navbar-expand-lg
       border-bottom
       fixed-top
-    "
-  >
+    ">
     <div class="container">
       <a class="navbar-brand" href="/"><strong>Vue</strong>Drive</a>
-
-      <form class="form-inline mt-2 mt-md-0">
-        <input
-          class="form-control"
-          type="text"
-          placeholder="Search in Drive"
-          aria-label="Search"
-        />
-      </form>
+      <search-form  v-model="q"/>
     </div>
   </nav>
 </template>
+
+<script>
+import SearchForm from './SearchForm.vue';
+import { ref, watchEffect } from 'vue';
+export default {
+  components: { SearchForm },
+  setup() {
+    const q = ref("");
+    
+    watchEffect(() => console.log('q', q.value));
+    
+    return { q }
+  },
+}
+</script>

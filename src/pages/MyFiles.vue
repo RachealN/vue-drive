@@ -44,10 +44,11 @@ export default {
     }
 
     watchEffect(async() =>files.value = await fetchFiles(query));
-
+ 
     return { files, handleSortChange };
 
   },
 
   };
 </script> 
+ 
