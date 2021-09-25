@@ -13,32 +13,32 @@
 </template>
 
 <script>
+
 import filesApi from "../api/files";
-import FilesList from "../components/files/FilesList.vue";
+import { ref , onMounted} from "vue";
 import ActionBar from "../components/ActionBar.vue";
+import FilesList from "../components/files/FilesList.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
+
+const fetchFiles = async() => {
+    try{
+      const { data } = await filesApi.index();
+      return data;  
+    }catch(error){  
+      console.log(error);
+    }
+  };  
 
 export default {
   components: { ActionBar, IconTypeCommon, FilesList   },
+  setup(){
+    const files = ref([]);
 
-  mounted(){
-    this.fetchFiles()
+    onMounted(async() =>files.value = await fetchFiles());
+
+    return { files };
+
   },
 
-  data: () => ({
-    files: []
-  }),
-
-  methods: {
-    async fetchFiles() {
-      try{
-        const { data } = await filesApi.index();
-        this.files = data;  
-      }catch(error){  
-        console.log(error);
-      }
-    }
-
-  }
 };
 </script>
