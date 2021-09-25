@@ -4,7 +4,7 @@
 
     <div class="d-flex justify-content-between align-items-center py-2">
       <h6 class="text-muted mb-0">Files</h6>
-      <sort-toggler />
+      <sort-toggler @sort-change="handleSortChange(event)"/>
     </div>
     <files-list :files="files"/>
   </div>
@@ -13,15 +13,15 @@
 <script>
 
 import filesApi from "../api/files";
-import { ref , onMounted} from "vue";
+import { ref , onMounted, reactive } from "vue";
 import ActionBar from "../components/ActionBar.vue";
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
 
-const fetchFiles = async() => {
+const fetchFiles = async(query) => {
     try{
-      const { data } = await filesApi.index();
+      const { data } = await filesApi.index(query);
       return data;  
     }catch(error){  
       console.log(error);
@@ -33,9 +33,19 @@ export default {
   setup(){
     const files = ref([]);
 
-    onMounted(async() =>files.value = await fetchFiles());
+    const query = reactive({
+      _sort: "name",
+      _order: "asc"
+    });
 
-    return { files };
+    const handleSortChange = (payload) => {
+      query._sort = payload.column;
+      query._order = payload.order;
+    }
+
+    onMounted(async() =>files.value = await fetchFiles(query));
+
+    return { files, handleSortChange };
 
   },
 
