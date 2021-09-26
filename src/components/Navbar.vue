@@ -24,7 +24,7 @@ export default {
     
     watchEffect(() => console.log('q', q.value));
     
-    return { q }
+    return { q };  
   },
 }
 </script>

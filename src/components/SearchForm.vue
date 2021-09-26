@@ -24,7 +24,7 @@ export default {
         handleEnterKey(event) {
             this.$emit('update:modelValue', event.target.value)
         },
-        handleEscapeKey(event){
+        handleEscapeKey(){
             this.$$emit('update:modelValue', "");
         }
           

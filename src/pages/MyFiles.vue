@@ -13,7 +13,7 @@
 <script>
 
 import filesApi from "../api/files";
-import { ref, reactive, watchEffect} from "vue";
+import { ref, reactive, watchEffect} from "vue"; 
 import ActionBar from "../components/ActionBar.vue";
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
@@ -43,11 +43,15 @@ export default {
       query._order = payload.order;
     }
 
-    watchEffect(async() =>files.value = await fetchFiles(query));
+    watchEffect(async() => files.value = await fetchFiles(query));
     
     return { files, handleSortChange };
 
   },
+
+  
+
+  
   };
 </script> 
  

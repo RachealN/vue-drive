@@ -1,4 +1,4 @@
-<template>
+ <template>
     <button  @click="toggle" class="rounded-button">
         <icon-arrow-up v-if="sort.order === 'asc'"/>
         <icon-arrow-down  v-else />
