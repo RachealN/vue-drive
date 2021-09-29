@@ -51,8 +51,6 @@ export default {
     watchEffect(async() =>files.value = await fetchFiles(query));
 
     return { files, handleSortChange, q: toRef(query, 'q') };
-
   },
-
-  };
+};
 </script> 
