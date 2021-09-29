@@ -22,6 +22,7 @@ import SearchForm from '../components/SearchForm.vue';
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
+import axios from "axios";
 
 const fetchFiles = async(query) => {
     try{
@@ -34,6 +35,7 @@ const fetchFiles = async(query) => {
 
 export default {
   components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm  },
+
   setup(){
     const files = ref([]);
 
@@ -53,6 +55,5 @@ export default {
     return { files, handleSortChange, q: toRef(query, 'q') };
 
   },
-
-  };
+};
 </script> 
