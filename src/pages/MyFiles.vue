@@ -1,6 +1,9 @@
 <template>
   <div class="container py-3">
-    <action-bar :selected-count="selectedItems.length" @remove="handleRemove"/>
+    <action-bar 
+      :selected-count="selectedItems.length" 
+      @remove="handleRemove" 
+      @rename="showModal = true"/>
 
     <div class="d-flex justify-content-between align-items-center py-2">
 
@@ -17,6 +20,13 @@
       type="success" 
       position="bottom-left"
       @hide="toast.show = false"/>
+
+      <app-modal 
+        title="Rename" 
+        :show="showModal && selectedItems.length === 1"
+        @hide = "showModal = false">
+        Rename
+      </app-modal>
   </div>
 </template>
 
@@ -68,6 +78,7 @@ export default {
       show: false,
       message: ""
     })
+    const showModal = ref(false);
 
     const handleSelectChange = (items) => {
       selectedItems.value = Array.from(items)
@@ -89,7 +100,16 @@ export default {
 
     watchEffect(async() =>files.value = await fetchFiles(query));
 
-    return { files, handleSortChange, handleSelectChange, selectedItems,handleRemove,toast, q: toRef(query, 'q') };
+    return { 
+      files, 
+      handleSortChange, 
+      handleSelectChange, 
+      selectedItems,
+      handleRemove,
+      toast, 
+      showModal, 
+      q: toRef(query, 'q') 
+      }
   },
 };
 </script> 
