@@ -1,15 +1,15 @@
 <template>
   <div class="container py-3">
     <ActionBar />
-
     <div class="d-flex justify-content-between align-items-center py-2">
-      <h6 class="text-muted mb-0">Files</h6>
+
+      <h6 class="text-muted mb-0">Files{{ selectedItems }}</h6>
       <sort-toggler @sort-change="handleSortChange($event)"/>
     </div>
     <teleport to="#search-form">
       <search-form  v-model="q"/>      
     </teleport>
-    <files-list :files="files"/>
+    <files-list :files="files" @select-change="handleSelectChange($event)"/>
   </div>
 </template>
 
@@ -43,6 +43,12 @@ export default {
       q: "",
     });
 
+    const selectedItems = ref([]);
+
+    const handleSelectChange = (items) => {
+      selectedItems.value = Array.from(items)
+    }
+
     const handleSortChange = (payload) => {
       query._sort = payload.column;
       query._order = payload.order;
@@ -50,7 +56,7 @@ export default {
 
     watchEffect(async() =>files.value = await fetchFiles(query));
 
-    return { files, handleSortChange, q: toRef(query, 'q') };
+    return { files, handleSortChange, handleSelectChange, selectedItems, q: toRef(query, 'q') };
   },
 };
 </script> 
