@@ -25,7 +25,8 @@
         title="Rename" 
         :show="showModal && selectedItems.length === 1"
         @hide = "showModal = false">
-        Rename
+
+        <file-rename-form />
       </app-modal>
   </div>
 </template>
@@ -38,6 +39,7 @@ import ActionBar from "../components/ActionBar.vue";
 import SearchForm from '../components/SearchForm.vue';
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
+import FileRenameForm  from "../components/files/FileRenameForm.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
 
 const fetchFiles = async(query) => {
@@ -62,7 +64,7 @@ const removeItem = async(item, files) => {
 }
 
 export default {
-  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm  },
+  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm, FileRenameForm },
   setup(){
     const files = ref([]);
 
