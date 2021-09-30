@@ -1,6 +1,6 @@
  <template>
      <form  @submit.prevent="handleSubmit">
-         <input type="text" class="form-control" v-model="name">
+         <input v-highlight type="text" class="form-control" v-model="name">
          <div class="d-flex flex-row-reverse mt-3">
             <button class="btn btn-primary" type="submit">OK</button>
             <button class=" btn btn-outline-secondary me-2" @click.prevent="$emit('close')">Cancel</button>
@@ -10,6 +10,7 @@
 
 <script>
 import filesApi from "../../api/files";
+import { nextTick } from "vue";
 
 export default {
     props: {
@@ -18,6 +19,19 @@ export default {
             required: true
         }
     },
+
+    directives: {
+        highlight: {
+            mounted(el) {
+                nextTick(() =>{
+                    const selectionEnd = el.value.split(".").slice(0, -1).join(".").length;
+                    el.setSelectionRange(0,selectionEnd);
+                });
+                el.focus();
+            }
+        }
+    },
+
     data() {
         return {
             name: this.file.name
