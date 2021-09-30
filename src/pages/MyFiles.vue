@@ -26,7 +26,10 @@
         :show="showModal && selectedItems.length === 1"
         @hide = "showModal = false">
 
-        <file-rename-form :file="selectedItems[0]" @close="showModal = false "/>
+        <file-rename-form 
+          :file="selectedItems[0]" 
+          @close="showModal = false "
+          @file-updated="handleFileUpdated($event)"/>
       </app-modal>
   </div>
 </template>
@@ -98,6 +101,14 @@ export default {
         toast.show = true;
         toast.message = "Selected item successfully removed"
       }
+    };
+
+    const handleFileUpdated = (file) => {
+      const oldFile =  selectedItems.value[0];
+      const index = files.value.findIndex(item => item.id === file.id);
+      files.value.splice(index, 1, file);
+      toast.show = true;
+      toast.message = `File '${oldFile.name}' to '${file.name}'`;
     }
 
     watchEffect(async() =>files.value = await fetchFiles(query));
@@ -108,8 +119,9 @@ export default {
       handleSelectChange, 
       selectedItems,
       handleRemove,
-      toast, 
+      toast,  
       showModal, 
+      handleFileUpdated,
       q: toRef(query, 'q') 
       }
   },
