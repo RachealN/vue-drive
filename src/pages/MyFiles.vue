@@ -11,6 +11,12 @@
       <search-form  v-model="q"/>      
     </teleport>
     <files-list :files="files" @select-change="handleSelectChange($event)"/>
+    <app-toast 
+      :show="toast.show" 
+      :message="toast.message" 
+      type="success" 
+      position="bottom-left"
+      @hide="toast.show = false"/>
   </div>
 </template>
 
@@ -58,6 +64,11 @@ export default {
 
     const selectedItems = ref([]);
 
+    const toast = reactive({
+      show: false,
+      message: ""
+    })
+
     const handleSelectChange = (items) => {
       selectedItems.value = Array.from(items)
     }
@@ -71,12 +82,14 @@ export default {
       if(confirm("Are you sure?")) {
         selectedItems.value.forEach((item) => removeItem(item,files));
         selectedItems.value.splice(0);
+        toast.show = true;
+        toast.message = "Selected item successfully removed"
       }
     }
 
     watchEffect(async() =>files.value = await fetchFiles(query));
 
-    return { files, handleSortChange, handleSelectChange, selectedItems,handleRemove, q: toRef(query, 'q') };
+    return { files, handleSortChange, handleSelectChange, selectedItems,handleRemove,toast, q: toRef(query, 'q') };
   },
 };
 </script> 
