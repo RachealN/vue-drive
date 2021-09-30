@@ -1,6 +1,6 @@
 <template>
   <div class="container py-3">
-    <action-bar :selected-count="selectedItems.length"/>
+    <action-bar :selected-count="selectedItems.length" @remove="handleRemove"/>
 
     <div class="d-flex justify-content-between align-items-center py-2">
 
@@ -33,6 +33,18 @@ const fetchFiles = async(query) => {
     }
   };  
 
+const removeItem = async(item, files) => {
+  try {
+    const response = await filesApi.delete(item.id);
+    if (response.status === 200 || response.status === 204){
+      const index = files.value.findIndex(file => file.id === item.id)
+      files.value.splice(index, 1);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default {
   components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm  },
   setup(){
@@ -55,9 +67,17 @@ export default {
       query._order = payload.order;
     }
 
+    const handleRemove = () => {
+      if(confirm("Are you sure?")) {
+        selectedItems.value.forEach((item) => removeItem(item,files));
+        selectedItems.value.splice(0);
+      }
+    }
+
     watchEffect(async() =>files.value = await fetchFiles(query));
 
-    return { files, handleSortChange, handleSelectChange, selectedItems, q: toRef(query, 'q') };
+    return { files, handleSortChange, handleSelectChange, selectedItems,handleRemove, q: toRef(query, 'q') };
   },
 };
 </script> 
+ 
