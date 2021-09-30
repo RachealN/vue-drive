@@ -1,6 +1,9 @@
 <template>
   <div class="container py-3">
-    <action-bar :selected-count="selectedItems.length" @remove="handleRemove"/>
+    <action-bar 
+      :selected-count="selectedItems.length" 
+      @remove="handleRemove" 
+      @rename="showModal = true"/>
 
     <div class="d-flex justify-content-between align-items-center py-2">
 
@@ -17,6 +20,14 @@
       type="success" 
       position="bottom-left"
       @hide="toast.show = false"/>
+
+      <app-modal 
+        title="Rename" 
+        :show="showModal && selectedItems.length === 1"
+        @hide = "showModal = false">
+
+        <file-rename-form />
+      </app-modal>
   </div>
 </template>
 
@@ -28,6 +39,7 @@ import ActionBar from "../components/ActionBar.vue";
 import SearchForm from '../components/SearchForm.vue';
 import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
+import FileRenameForm  from "../components/files/FileRenameForm.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
 
 const fetchFiles = async(query) => {
@@ -52,7 +64,7 @@ const removeItem = async(item, files) => {
 }
 
 export default {
-  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm  },
+  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm, FileRenameForm },
   setup(){
     const files = ref([]);
 
@@ -68,6 +80,7 @@ export default {
       show: false,
       message: ""
     })
+    const showModal = ref(false);
 
     const handleSelectChange = (items) => {
       selectedItems.value = Array.from(items)
@@ -89,7 +102,16 @@ export default {
 
     watchEffect(async() =>files.value = await fetchFiles(query));
 
-    return { files, handleSortChange, handleSelectChange, selectedItems,handleRemove,toast, q: toRef(query, 'q') };
+    return { 
+      files, 
+      handleSortChange, 
+      handleSelectChange, 
+      selectedItems,
+      handleRemove,
+      toast, 
+      showModal, 
+      q: toRef(query, 'q') 
+      }
   },
 };
 </script> 
