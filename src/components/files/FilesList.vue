@@ -1,15 +1,15 @@
 <template>
-    <div class="row">
+    <div class="row" @click="clearSelected">
       <file-item 
         v-for="file in files"  
         :file="file"  
         :key="`file=${file.id}`"
-        @click.exact="selectOne(file)"
-        @click.meta.exact="selectMultiple(file)"
+        @click.exact.stop="selectOne(file)"
+        @click.meta.exact.stop="selectMultiple(file)"
         :class=" { 'selected-file': isSelected(file)}"
         />
     </div>
-</template>
+</template> 
 
 <script>
 import FileItem from "./FileItem.vue";
@@ -42,7 +42,12 @@ export default {
         }
         const isSelected = (item) => selectedItems.has(item);
 
-        return { selectOne, selectMultiple, isSelected };
+        const clearSelected = () => {
+            selectedItems.clear();
+            emit('select-change', selectedItems)
+        }
+
+        return { selectOne, selectMultiple, isSelected, clearSelected};
 
     },
     emits: ['select-change']

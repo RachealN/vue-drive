@@ -1,6 +1,7 @@
 <template>
   <div class="container py-3">
-    <ActionBar />
+    <action-bar :selected-count="selectedItems.length"/>
+
     <div class="d-flex justify-content-between align-items-center py-2">
 
       <h6 class="text-muted mb-0">Files{{ selectedItems }}</h6>
