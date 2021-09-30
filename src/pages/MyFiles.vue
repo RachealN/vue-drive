@@ -26,7 +26,7 @@
         :show="showModal && selectedItems.length === 1"
         @hide = "showModal = false">
 
-        <file-rename-form />
+        <file-rename-form :file="selectedItems[0]" @close="showModal = false "/>
       </app-modal>
   </div>
 </template>
