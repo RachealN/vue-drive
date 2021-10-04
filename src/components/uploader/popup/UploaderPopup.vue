@@ -1,19 +1,14 @@
 <template>
-    <div class="card shodow uploader-popup">
+    <div class="card shodow uploader-popup" v-if="items.length">
         <div class="card-header bg-dark py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <span class="text-light"> {{ uploadingStatus }} </span>
-                <div class="popup-controls"> 
-                    <button class="rounded-button me-2">
-                        <icon-chevron-down />
-                    </button>
-                    <button>
-                        <icon-times />
-                    </button>
-                </div>
+                <popup-controls 
+                    @toggle="showPopupBody = !showPopupBody"
+                    @close="handleClose"/>
             </div>
         </div>
-        <div class="upload-items">
+        <div class="upload-items" v-show="showPopupBody">
             <ul class="list-group list-group-flush">
                 <li 
                     class="list-group-item d-flex justify-content-between align-items-center" 
@@ -33,7 +28,28 @@
 <script>
 import { computed, ref, watch} from 'vue';
 import states from "../states";
+import PopupControls from "./PopupControls.vue";
 
+const randomId = () => {
+    return Math.random().toString(36).substr(2,9);
+    }
+
+const getUploadItems = (files) =>{
+    return Array.from(files).map(file => ({
+        id: randomId(),
+        file,
+        progress: 0,
+        state: states.WAITING,
+        response: null
+            }))
+        }
+
+const uploadingItemsCount = (items) => {
+    return computed(() => {
+         return items.value.filter((item) => item.state === states.WAITING || item.state === states.UPLOADING).length; 
+        }).value;
+
+}
 export default {
     props: {
         files: {
@@ -41,30 +57,19 @@ export default {
             required: true
         }
     }, 
-
+    components: { PopupControls },
     setup (props, {emit}) {
         const items = ref([]);
+        const showPopupBody = ref(true); 
+
+        const handleClose = () => {
+            if(confirm("Cancel all uploads")){
+                items.value.splice(0);
+            }
+        }
         
-        const randomId = () => {
-            return Math.random().toString(36).substr(2,9);
-        }
-
-        const getUploadItems = (files) =>{
-            return Array.from(files).map(file => ({
-                id: randomId(),
-                file,
-                progress: 0,
-                state: states.WAITING,
-                response: null
-            }))
-        }
-
-        const uploadingItemsCount = computed(() => {
-         return items.value.filter((item) => item.state === states.WAITING || item.state === states.UPLOADING).length; 
-        })
-
         const uploadingStatus = computed(() => {
-            return `Uploading ${uploadingItemsCount.value} items`;
+            return `Uploading ${uploadingItemsCount(items)} items`;
 
         })
          
@@ -73,7 +78,7 @@ export default {
             
         })
        
-        return { items, uploadingStatus };
+        return { items, uploadingStatus,showPopupBody, handleClose};
 
     }
 }
