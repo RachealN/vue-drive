@@ -2,7 +2,7 @@
     <div class="card shodow uploader-popup">
         <div class="card-header bg-dark py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <span class="text-light"> Uploading </span>
+                <span class="text-light"> {{ uploadingStatus }} </span>
                 <div class="popup-controls"> 
                     <button class="rounded-button me-2">
                         <icon-chevron-down />
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { ref, watch} from 'vue';
+import { computed, ref, watch} from 'vue';
 import states from "../states";
 
 export default {
@@ -59,12 +59,21 @@ export default {
             }))
         }
 
+        const uploadingItemsCount = computed(() => {
+         return items.value.filter((item) => item.state === states.WAITING || item.state === states.UPLOADING).length; 
+        })
+
+        const uploadingStatus = computed(() => {
+            return `Uploading ${uploadingItemsCount.value} items`;
+
+        })
+         
         watch(() => props.files, (newFiles) => {
             items.value.unshift(...getUploadItems(newFiles));
             
         })
        
-        return { items };
+        return { items, uploadingStatus };
 
     }
 }
