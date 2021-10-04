@@ -12,10 +12,15 @@
       <h6 class="text-muted mb-0">Files{{ selectedItems }}</h6>
       <sort-toggler @sort-change="handleSortChange($event)"/>
     </div>
+
     <teleport to="#search-form">
       <search-form  v-model="q"/>      
     </teleport>
-    <files-list :files="files" @select-change="handleSelectChange($event)"/>
+
+    <drop-zone @files-dropped="choosenFiles = $event" :show-message="!files.length" >
+      <files-list :files="files" @select-change="handleSelectChange($event)"/>
+    </drop-zone>
+
     <app-toast 
       :show="toast.show" 
       :message="toast.message" 
@@ -49,6 +54,7 @@ import SortToggler from "../components/SortToggler.vue";
 import FilesList from "../components/files/FilesList.vue";
 import FileRenameForm  from "../components/files/FileRenameForm.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
+import DropZone from "../components/uploader/file-chooser/DropZone.vue";
 
 const fetchFiles = async(query) => {
     try{
@@ -72,7 +78,7 @@ const removeItem = async(item, files) => {
 }
 
 export default {
-  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm, FileRenameForm },
+  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm, FileRenameForm, DropZone},
   setup(){
     const files = ref([]);
 
