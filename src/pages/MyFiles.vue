@@ -3,7 +3,9 @@
     <action-bar 
       :selected-count="selectedItems.length" 
       @remove="handleRemove" 
-      @rename="showModal = true"/>
+      @rename="showModal = true"
+      @files-choosen="choosenFiles= $event"
+      />
 
     <div class="d-flex justify-content-between align-items-center py-2">
 
@@ -31,6 +33,9 @@
           @close="showModal = false "
           @file-updated="handleFileUpdated($event)"/>
       </app-modal>
+      <div v-if="choosenFiles.length">
+        Uploading..........
+      </div>
   </div>
 </template>
 
@@ -84,6 +89,7 @@ export default {
       message: ""
     })
     const showModal = ref(false);
+    const choosenFiles = ref([]);
 
     const handleSelectChange = (items) => {
       selectedItems.value = Array.from(items)
@@ -92,7 +98,7 @@ export default {
     const handleSortChange = (payload) => {
       query._sort = payload.column;
       query._order = payload.order;
-    }
+    }  
 
     const handleRemove = () => {
       if(confirm("Are you sure?")) {
@@ -122,6 +128,7 @@ export default {
       toast,  
       showModal, 
       handleFileUpdated,
+      choosenFiles,
       q: toRef(query, 'q') 
       }
   },
