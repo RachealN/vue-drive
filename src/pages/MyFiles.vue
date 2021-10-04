@@ -38,9 +38,7 @@
           @close="showModal = false "
           @file-updated="handleFileUpdated($event)"/>
       </app-modal>
-      <div v-if="choosenFiles.length">
-        Uploading..........
-      </div>
+      <uploader-popup :files="choosenFiles"/>
   </div>
 </template>
 
@@ -55,6 +53,7 @@ import FilesList from "../components/files/FilesList.vue";
 import FileRenameForm  from "../components/files/FileRenameForm.vue";
 import IconTypeCommon from '../components/icons/IconTypeCommon.vue';
 import DropZone from "../components/uploader/file-chooser/DropZone.vue";
+import UploaderPopup from "../components/uploader/popup/UploaderPopup.vue";
 
 const fetchFiles = async(query) => {
     try{
@@ -78,8 +77,17 @@ const removeItem = async(item, files) => {
 }
 
 export default {
-  components: { ActionBar, IconTypeCommon, FilesList, SortToggler, SearchForm, FileRenameForm, DropZone},
-  setup(){
+  components: { 
+    ActionBar, 
+    IconTypeCommon, 
+    FilesList, 
+    SortToggler, 
+    SearchForm, 
+    FileRenameForm, 
+    DropZone,
+    UploaderPopup
+    },
+   setup(){
     const files = ref([]);
 
     const query = reactive({
