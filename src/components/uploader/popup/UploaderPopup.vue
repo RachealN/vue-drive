@@ -15,8 +15,11 @@
         </div>
         <div class="upload-items">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in 5">
-                    <p class="upload-item"> File {{ item }}</p>
+                <li 
+                    class="list-group-item d-flex justify-content-between align-items-center" 
+                    v-for="item in items"
+                    :key="`item-${item.id}`">
+                    <p class="upload-item">{{ item.file.name}}</p>
                     <div class="upload-controls">
                         X
                     </div>
@@ -28,12 +31,41 @@
 </template>
 
 <script>
+import { ref, watch} from 'vue';
+import states from "../states";
+
 export default {
     props: {
         files: {
             type: Object,
             required: true
         }
+    }, 
+
+    setup (props, {emit}) {
+        const items = ref([]);
+        
+        const randomId = () => {
+            return Math.random().toString(36).substr(2,9);
+        }
+
+        const getUploadItems = (files) =>{
+            return Array.from(files).map(file => ({
+                id: randomId(),
+                file,
+                progress: 0,
+                state: states.WAITING,
+                response: null
+            }))
+        }
+
+        watch(() => props.files, (newFiles) => {
+            items.value.unshift(...getUploadItems(newFiles));
+            
+        })
+       
+        return { items };
+
     }
 }
 </script>
