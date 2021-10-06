@@ -2,11 +2,14 @@
     <button class="btn btn-outline-primary" @click="handleClick">
       <icon-upload /> Upload Files
     </button>
+   <speech-to-text></speech-to-text>
     <input type="file" multiple style="display:none;" ref="file" @change="$emit('files-choosen',$event.target.files)">
 </template>
 <script>
 import { ref } from 'vue'
+import SpeechToText from '../../VoiceFiles/SpeechToText.vue';
 export default {
+  components: { SpeechToText },
     setup() {
         const file = ref(null);
 
