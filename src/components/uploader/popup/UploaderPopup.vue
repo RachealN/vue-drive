@@ -10,16 +10,10 @@
         </div>
         <div class="upload-items" v-show="showPopupBody">
             <ul class="list-group list-group-flush">
-                <li 
-                    class="list-group-item d-flex justify-content-between align-items-center" 
+                <upload-item
                     v-for="item in items"
-                    :key="`item-${item.id}`">
-                    <p class="upload-item">{{ item.file.name}}</p>
-                    <div class="upload-controls">
-                        X
-                    </div>
-
-                </li>
+                    :key="`item-${item.id}`"
+                    :item="item"/>
             </ul>
         </div>
     </div>
@@ -29,6 +23,7 @@
 import { computed, ref, watch} from 'vue';
 import states from "../states";
 import PopupControls from "./PopupControls.vue";
+import UploadItem from "../item/UploadItem.vue";
 
 const randomId = () => {
     return Math.random().toString(36).substr(2,9);
@@ -57,7 +52,7 @@ export default {
             required: true
         }
     }, 
-    components: { PopupControls },
+    components: { PopupControls, UploadItem },
     setup (props, {emit}) {
         const items = ref([]);
         const showPopupBody = ref(true); 
