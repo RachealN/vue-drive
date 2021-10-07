@@ -6,7 +6,6 @@
       @rename="showModal = true"
       @files-choosen="choosenFiles= $event"
       />
-
     <div class="d-flex justify-content-between align-items-center py-2">
 
       <h6 class="text-muted mb-0">Files{{ selectedItems }}</h6>
