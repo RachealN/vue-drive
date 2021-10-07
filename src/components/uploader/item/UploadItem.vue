@@ -5,12 +5,45 @@
             <component :is="iconFileType"/>
             <span> {{ item.file.name}} </span>
         </p>
-        <div class="upload-controls">X</div>
+        <div class="upload-controls">
+          {{ uploadItem.state }} - {{uploadItem.progress}}
+        </div>
     </li>
-</template>
+</template> 
 
 <script>
-import { useIconFileType } from '../../../composable/icon-file-type'
+import { reactive, onMounted } from 'vue';
+import { useIconFileType } from '../../../composable/icon-file-type';
+import filesApi from "../../../api/files";
+import states from "../states";
+
+const createFormData = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return formData;
+}
+
+const startUpload = async(upload) => {
+  try {
+    upload.state = states.UPLOADING;
+    const { data } = await filesApi.create(createFormData(upload.file), {
+      onUploadProgress: (e) => {
+        if(e.lengthComputable){
+          upload.progress = Math.round((e.loaded / e.total) * 100)
+        }
+      }
+    });
+    upload.state = states.COMPLETE;
+    upload.response = data;
+    
+  } catch (error) {
+    upload.state = states.FAILED;
+    upload.state = 0;
+  }
+}
+
+
+
 export default {
     props: {
         item: {
@@ -19,14 +52,19 @@ export default {
         }
     },
     setup(props) {
-        return {
-            iconFileType: useIconFileType(props.item.file.type)
-        }
+      const uploadItem = reactive(props.item);
+
+      onMounted(startUpload(uploadItem ));
+
+      return {
+        iconFileType: useIconFileType(props.item.file.type),
+        uploadItem
+        };
 
     }
 }
 </script>
-
+ 
 <style scoped>
  .upload-item {
   line-height: 2;
