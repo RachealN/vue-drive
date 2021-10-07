@@ -5,12 +5,16 @@
             <component :is="iconFileType"/>
             <span> {{ item.file.name}} </span>
         </p>
-        <div class="upload-controls">X</div>
+        <div class="upload-controls">
+          {{ uploadItem.state }} - {{uploadItem.progress}}
+        </div>
     </li>
 </template>
 
 <script>
-import { useIconFileType } from '../../../composable/icon-file-type'
+import { reactive, onMounted } from 'vue';
+import { useIconFileType } from '../../../composable/icon-file-type';
+
 export default {
     props: {
         item: {
@@ -19,14 +23,23 @@ export default {
         }
     },
     setup(props) {
-        return {
-            iconFileType: useIconFileType(props.item.file.type)
-        }
+      const uploadItem = reactive(props.item);
+
+      onMounted(() => {
+        setInterval(() => {
+          uploadItem.progress++;
+        }, 500)
+      });
+
+      return {
+        iconFileType: useIconFileType(props.item.file.type),
+        uploadItem
+        };
 
     }
 }
 </script>
-
+ 
 <style scoped>
  .upload-item {
   line-height: 2;
