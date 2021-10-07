@@ -16,6 +16,14 @@
       "id": 5,
       "name": "File 3.xls",
       "mimeType": "application/vnd.ms-excel"
+    },
+    {
+      "name": "Screenshot from 2021-10-06 17-45-48.png",
+      "mimeType": "image/png",
+      "url": "http://localhost:3030/uploads/screenshot-from-2021-10-06-17-45-48.png",
+      "path": "/home/racheal/vue-drive/server/uploads/screenshot-from-2021-10-06-17-45-48.png",
+      "createdAt": 1633634521924,
+      "id": 6
     }
   ]
 }

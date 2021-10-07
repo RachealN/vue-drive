@@ -9,11 +9,40 @@
           {{ uploadItem.state }} - {{uploadItem.progress}}
         </div>
     </li>
-</template>
+</template> 
 
 <script>
 import { reactive, onMounted } from 'vue';
 import { useIconFileType } from '../../../composable/icon-file-type';
+import filesApi from "../../../api/files";
+import states from "../states";
+
+const createFormData = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return formData;
+}
+
+const startUpload = async(upload) => {
+  try {
+    upload.state = states.UPLOADING;
+    const { data } = await filesApi.create(createFormData(upload.file), {
+      onUploadProgress: (e) => {
+        if(e.lengthComputable){
+          upload.progress = Math.round((e.loaded / e.total) * 100)
+        }
+      }
+    });
+    upload.state = states.COMPLETE;
+    upload.response = data;
+    
+  } catch (error) {
+    upload.state = states.FAILED;
+    upload.state = 0;
+  }
+}
+
+
 
 export default {
     props: {
@@ -25,11 +54,7 @@ export default {
     setup(props) {
       const uploadItem = reactive(props.item);
 
-      onMounted(() => {
-        setInterval(() => {
-          uploadItem.progress++;
-        }, 500)
-      });
+      onMounted(startUpload(uploadItem ));
 
       return {
         iconFileType: useIconFileType(props.item.file.type),
